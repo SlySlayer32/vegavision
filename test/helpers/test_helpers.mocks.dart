@@ -4,15 +4,20 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i8;
-import 'dart:io' as _i9;
+import 'dart:io' as _i10;
 
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i12;
 import 'package:vegavision/core/di/database_interface.dart' as _i7;
 import 'package:vegavision/models/edit_request.dart' as _i2;
 import 'package:vegavision/models/edit_result.dart' as _i4;
 import 'package:vegavision/models/image_model.dart' as _i5;
+import 'package:vegavision/models/image_status.dart' as _i9;
 import 'package:vegavision/repositories/edit_repository.dart' as _i3;
 import 'package:vegavision/repositories/image_repository.dart' as _i6;
+import 'package:vegavision/services/gemini_service.dart' as _i14;
+import 'package:vegavision/services/storage_service.dart' as _i11;
+import 'package:vegavision/services/vision_service.dart' as _i13;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -416,7 +421,7 @@ class MockEditRepository extends _i1.Mock implements _i3.EditRepository {
     String? errorMessage,
     int? processingTimeMs,
     Map<String, double>? confidenceScores,
-    dynamic metrics,
+    _i4.ProcessingMetrics? metrics,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -667,7 +672,7 @@ class MockImageRepository extends _i1.Mock implements _i6.ImageRepository {
   @override
   _i8.Future<void> updateImageStatus(
     String? id,
-    dynamic status, {
+    _i9.ImageStatus? status, {
     String? cloudPath,
   }) =>
       (super.noSuchMethod(
@@ -706,7 +711,7 @@ class MockImageRepository extends _i1.Mock implements _i6.ImageRepository {
   @override
   _i8.Future<void> updateMultipleImageStatus(
     List<String>? ids,
-    dynamic status, {
+    _i9.ImageStatus? status, {
     String? cloudPath,
   }) =>
       (super.noSuchMethod(
@@ -733,20 +738,178 @@ class MockImageRepository extends _i1.Mock implements _i6.ImageRepository {
       ) as _i8.Future<int>);
 
   @override
-  _i8.Future<_i9.File?> getImageFile(String? id) => (super.noSuchMethod(
+  _i8.Future<_i10.File?> getImageFile(String? id) => (super.noSuchMethod(
         Invocation.method(
           #getImageFile,
           [id],
         ),
-        returnValue: _i8.Future<_i9.File?>.value(),
-      ) as _i8.Future<_i9.File?>);
+        returnValue: _i8.Future<_i10.File?>.value(),
+      ) as _i8.Future<_i10.File?>);
 
   @override
-  _i8.Future<dynamic> getImageDimensions(String? id) => (super.noSuchMethod(
+  _i8.Future<_i5.ImageDimensions?> getImageDimensions(String? id) =>
+      (super.noSuchMethod(
         Invocation.method(
           #getImageDimensions,
           [id],
         ),
-        returnValue: _i8.Future<dynamic>.value(),
-      ) as _i8.Future<dynamic>);
+        returnValue: _i8.Future<_i5.ImageDimensions?>.value(),
+      ) as _i8.Future<_i5.ImageDimensions?>);
+}
+
+/// A class which mocks [StorageService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockStorageService extends _i1.Mock implements _i11.StorageService {
+  MockStorageService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i8.Future<String> uploadImage(
+    String? localPath,
+    String? fileName, {
+    void Function(double)? onProgress,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #uploadImage,
+          [
+            localPath,
+            fileName,
+          ],
+          {#onProgress: onProgress},
+        ),
+        returnValue: _i8.Future<String>.value(_i12.dummyValue<String>(
+          this,
+          Invocation.method(
+            #uploadImage,
+            [
+              localPath,
+              fileName,
+            ],
+            {#onProgress: onProgress},
+          ),
+        )),
+      ) as _i8.Future<String>);
+
+  @override
+  _i8.Future<void> deleteImage(String? cloudPath) => (super.noSuchMethod(
+        Invocation.method(
+          #deleteImage,
+          [cloudPath],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+}
+
+/// A class which mocks [VisionService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockVisionService extends _i1.Mock implements _i13.VisionService {
+  MockVisionService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i8.Future<Map<String, dynamic>?> analyzeImage(
+    String? imagePath, {
+    List<_i13.VisionFeatureType>? features = const [
+      _i13.VisionFeatureType.objectDetection
+    ],
+    _i13.VisionRequestOptions? options,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #analyzeImage,
+          [imagePath],
+          {
+            #features: features,
+            #options: options,
+          },
+        ),
+        returnValue: _i8.Future<Map<String, dynamic>?>.value(),
+      ) as _i8.Future<Map<String, dynamic>?>);
+}
+
+/// A class which mocks [GeminiService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGeminiService extends _i1.Mock implements _i14.GeminiService {
+  MockGeminiService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i8.Future<String?> editImage(
+    String? cloudPath,
+    String? instruction,
+    List<Map<String, double>>? markers, {
+    _i14.ImageEditOptions? options,
+    int? maxRetries = 3,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #editImage,
+          [
+            cloudPath,
+            instruction,
+            markers,
+          ],
+          {
+            #options: options,
+            #maxRetries: maxRetries,
+          },
+        ),
+        returnValue: _i8.Future<String?>.value(),
+      ) as _i8.Future<String?>);
+
+  @override
+  _i8.Future<_i14.ImageEditResult?> editImageFile(
+    _i10.File? imageFile,
+    String? instruction,
+    List<Map<String, double>>? markers, {
+    _i14.ImageEditOptions? options,
+    int? maxRetries = 3,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #editImageFile,
+          [
+            imageFile,
+            instruction,
+            markers,
+          ],
+          {
+            #options: options,
+            #maxRetries: maxRetries,
+          },
+        ),
+        returnValue: _i8.Future<_i14.ImageEditResult?>.value(),
+      ) as _i8.Future<_i14.ImageEditResult?>);
+
+  @override
+  _i8.Future<List<String>> generateImageVariations(
+    String? cloudPath,
+    String? instruction, {
+    int? count = 3,
+    _i14.ImageEditOptions? options,
+    int? maxRetries = 3,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #generateImageVariations,
+          [
+            cloudPath,
+            instruction,
+          ],
+          {
+            #count: count,
+            #options: options,
+            #maxRetries: maxRetries,
+          },
+        ),
+        returnValue: _i8.Future<List<String>>.value(<String>[]),
+      ) as _i8.Future<List<String>>);
 }

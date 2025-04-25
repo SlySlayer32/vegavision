@@ -1,17 +1,17 @@
 import 'dart:io';
 
-import 'package:darwin_camera/darwin_camera.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vegavision/core/di/locator.dart';
-import 'package:vegavision/image_editor/image_editor_view.dart';
-import 'package:vegavision/views/image_capture/image_capture_viewmodel.dart';
+import 'package:vegavision/viewmodels/image_capture_viewmodel.dart';
+import 'package:vegavision/views/image_editor/image_editor_view.dart';
 
 class ImageCaptureView extends StatefulWidget {
   const ImageCaptureView({super.key});
 
   @override
-  _ImageCaptureViewState createState() => _ImageCaptureViewState();
+  State<ImageCaptureView> createState() => _ImageCaptureViewState();
 }
 
 class _ImageCaptureViewState extends State<ImageCaptureView> with WidgetsBindingObserver {
@@ -28,18 +28,15 @@ class _ImageCaptureViewState extends State<ImageCaptureView> with WidgetsBinding
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Handle app lifecycle changes to properly dispose and reinitialize camera
-    if (_viewModel.isInitialized) {
-      if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
-        _viewModel.dispose();
-      } else if (state == AppLifecycleState.resumed) {
-        _initializeCamera();
-      }
+    if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
+      _viewModel.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      _initializeCamera();
     }
   }
 
   Future<void> _initializeCamera() async {
-    await _viewModel.initializeDarwinCamera();
+    await _viewModel.initializeCamera();
   }
 
   @override
@@ -128,11 +125,11 @@ class _ImageCaptureViewState extends State<ImageCaptureView> with WidgetsBinding
     return Stack(
       fit: StackFit.expand,
       children: [
-        // Darwin Camera preview
+        // Camera preview
         ClipRect(
           child: Container(
             color: Colors.black,
-            child: Center(child: DarwinCameraPreview(controller: viewModel.darwinController)),
+            child: Center(child: CameraPreview(viewModel.controller!)),
           ),
         ),
 
@@ -293,9 +290,6 @@ class _ImageCaptureViewState extends State<ImageCaptureView> with WidgetsBinding
                         value: viewModel.settings.exposureOffset,
                         onChanged: (value) => viewModel.setExposureOffset(value),
                         label: viewModel.settings.exposureOffset.toStringAsFixed(1),
-                        divisions:
-                            ((viewModel.maxExposureOffset - viewModel.minExposureOffset) * 2)
-                                .round(),
                       ),
                     ),
                   ],
@@ -327,7 +321,7 @@ class _ImageCaptureViewState extends State<ImageCaptureView> with WidgetsBinding
         ),
         child: Column(
           children: [
-            Icon(icon, color: Colors.white, size: 24),
+            Icon(icon, color: Colors.white),
             const SizedBox(height: 4),
             Text(label, style: const TextStyle(color: Colors.white)),
           ],

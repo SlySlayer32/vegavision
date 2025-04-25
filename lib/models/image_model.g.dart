@@ -8,7 +8,7 @@ part of 'image_model.dart';
 
 class ImageModelAdapter extends TypeAdapter<ImageModel> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
   ImageModel read(BinaryReader reader) {
@@ -21,14 +21,18 @@ class ImageModelAdapter extends TypeAdapter<ImageModel> {
       localPath: fields[1] as String,
       cloudPath: fields[2] as String?,
       createdAt: fields[3] as DateTime,
-      metadata: (fields[4] as Map?)?.cast<String, dynamic>(),
+      status: fields[4] as ImageStatus,
+      fileSize: fields[5] as int?,
+      mimeType: fields[6] as String?,
+      dimensions: fields[7] as ImageDimensions?,
+      source: fields[8] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ImageModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +42,15 @@ class ImageModelAdapter extends TypeAdapter<ImageModel> {
       ..writeByte(3)
       ..write(obj.createdAt)
       ..writeByte(4)
-      ..write(obj.metadata);
+      ..write(obj.status)
+      ..writeByte(5)
+      ..write(obj.fileSize)
+      ..writeByte(6)
+      ..write(obj.mimeType)
+      ..writeByte(7)
+      ..write(obj.dimensions)
+      ..writeByte(8)
+      ..write(obj.source);
   }
 
   @override

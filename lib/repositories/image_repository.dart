@@ -1,15 +1,13 @@
 import 'dart:io';
 
+import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
-
 import 'package:vegavision/models/image_model.dart';
+import 'package:vegavision/models/image_status.dart';
 import 'package:vegavision/services/storage_service.dart';
-// TODO: Add missing import for Database interface
-// import '../core/di/database_interface.dart';
 
 // Result of a paginated query
 class PaginatedResult<T> {
-
   PaginatedResult({
     required this.items,
     required this.total,
@@ -24,27 +22,8 @@ class PaginatedResult<T> {
   final bool hasMore;
 }
 
-// TODO: ImageStatus enum is referenced but not defined, need to create this enum
-// enum ImageStatus {
-//   local,
-//   uploading,
-//   uploaded,
-//   processing,
-//   processed,
-//   error
-// }
-
-// TODO: ImageDimensions class is used but not defined, need to implement this class
-// class ImageDimensions {
-//   final int width;
-//   final int height;
-//
-//   const ImageDimensions({required this.width, required this.height});
-// }
-
 // Filter options for querying images
 class ImageFilter {
-
   const ImageFilter({this.status, this.startDate, this.endDate, this.searchText, this.userId});
   final ImageStatus? status;
   final DateTime? startDate;
@@ -97,42 +76,50 @@ abstract class ImageRepository {
 
 // Implementation
 class ImageRepositoryImpl implements ImageRepository {
+  ImageRepositoryImpl({required StorageService storageService, required Box<ImageModel> database})
+    : _storageService = storageService,
+      _database = database;
 
-  ImageRepositoryImpl(this._storageService, this._database);
   final StorageService _storageService;
-  final Database _database;
-  final Uuid _uuid = const Uuid();
+  final Box<ImageModel> _database;
 
   @override
   Future<ImageModel> saveImage(
-    String localPath, {
+    String path,
+    String source, {
+    ImageStatus status = ImageStatus.pending,
     Map<String, dynamic>? metadata,
-    String? mimeType,
   }) async {
-    final String id = _uuid.v4();
+    final String id = const Uuid().v4();
 
     // Get file size
-    final File file = File(localPath);
+    final File file = File(path);
     final int fileSize = await file.length();
 
-    // Get image dimensions (this would use a package like image_size_getter in a real implementation)
-    final ImageDimensions dimensions = ImageDimensions(width: 1920, height: 1080);
-
-    // Determine MIME type if not provided
-    final String determinedMimeType = mimeType ?? _getMimeTypeFromPath(localPath);
+    // Determine MIME type
+    final String mimeType = _getMimeTypeFromPath(path);
 
     final ImageModel image = ImageModel(
       id: id,
-      localPath: localPath,
+      localPath: path,
       createdAt: DateTime.now(),
       fileSize: fileSize,
-      mimeType: determinedMimeType,
-      dimensions: dimensions,
+      mimeType: mimeType,
+      status: status,
       metadata: metadata,
     );
 
-    await _database.saveImage(image);
+    await _database.put(id, image);
     return image;
+  }
+
+  @override
+  Future<void> updateImageStatus(String id, ImageStatus status, {String? cloudPath}) async {
+    final ImageModel? image = _database.get(id);
+    if (image == null) return;
+
+    final updatedImage = image.copyWith(cloudPath: cloudPath ?? image.cloudPath, status: status);
+    await _database.put(id, updatedImage);
   }
 
   @override
@@ -146,7 +133,7 @@ class ImageRepositoryImpl implements ImageRepository {
     // This would typically be implemented with a more sophisticated database query
     // with filtering, sorting, and pagination
 
-    List<ImageModel> allImages = await _database.getImages();
+    List<ImageModel> allImages = _database.values.toList();
 
     // Apply filters if provided
     if (filter != null) {
@@ -225,22 +212,12 @@ class ImageRepositoryImpl implements ImageRepository {
 
   @override
   Future<ImageModel?> getImage(String id) async {
-    return await _database.getImage(id);
-  }
-
-  @override
-  Future<void> updateImageStatus(String id, ImageStatus status, {String? cloudPath}) async {
-    final image = await _database.getImage(id);
-    if (image == null) return;
-
-    final updatedImage = image.copyWith(cloudPath: cloudPath ?? image.cloudPath, status: status);
-
-    await _database.updateImage(updatedImage);
+    return _database.get(id);
   }
 
   @override
   Future<bool> deleteImage(String id) async {
-    final image = await _database.getImage(id);
+    final ImageModel? image = _database.get(id);
     if (image == null) return false;
 
     // Delete from local storage
@@ -263,7 +240,8 @@ class ImageRepositoryImpl implements ImageRepository {
     }
 
     // Delete from database
-    return await _database.deleteImage(id);
+    await _database.delete(id);
+    return true;
   }
 
   @override
@@ -272,7 +250,7 @@ class ImageRepositoryImpl implements ImageRepository {
 
     for (final localPath in localPaths) {
       try {
-        final image = await saveImage(localPath);
+        final image = await saveImage(localPath, 'source');
         savedImages.add(image);
       } catch (e) {
         print('Error saving image $localPath: $e');
@@ -317,7 +295,7 @@ class ImageRepositoryImpl implements ImageRepository {
 
   @override
   Future<File?> getImageFile(String id) async {
-    final image = await _database.getImage(id);
+    final ImageModel? image = _database.get(id);
     if (image == null) return null;
 
     // Check if the local file exists
@@ -336,7 +314,7 @@ class ImageRepositoryImpl implements ImageRepository {
 
         // Update the local path in the database
         final updatedImage = image.copyWith(localPath: downloadedFile.path);
-        await _database.updateImage(updatedImage);
+        await _database.put(id, updatedImage);
 
         return downloadedFile;
       } catch (e) {
@@ -350,7 +328,7 @@ class ImageRepositoryImpl implements ImageRepository {
 
   @override
   Future<ImageDimensions?> getImageDimensions(String id) async {
-    final image = await _database.getImage(id);
+    final ImageModel? image = _database.get(id);
     if (image == null) return null;
 
     // If dimensions are already in the model, return them
@@ -373,7 +351,6 @@ class ImageRepositoryImpl implements ImageRepository {
       case 'jpeg':
         return 'image/jpeg';
       case 'png':
-        return 'image/png';
       case 'gif':
         return 'image/gif';
       case 'webp':

@@ -18,30 +18,51 @@ class EditResultAdapter extends TypeAdapter<EditResult> {
     };
     return EditResult(
       id: fields[0] as String,
-      requestId: fields[1] as String,
-      imageId: fields[2] as String,
+      imageId: fields[1] as String,
+      originalImageId: fields[2] as String,
       editedImagePath: fields[3] as String,
-      createdAt: fields[4] as DateTime,
-      metadata: (fields[5] as Map?)?.cast<String, dynamic>(),
+      resultImagePath: fields[4] as String?,
+      downloadUrl: fields[5] as String?,
+      createdAt: fields[6] as DateTime,
+      expiresAt: fields[7] as DateTime?,
+      status: fields[8] as EditResultStatus,
+      errorMessage: fields[9] as String?,
+      processingTimeMs: fields[10] as int?,
+      confidenceScores: (fields[11] as Map?)?.cast<String, double>(),
+      metrics: fields[12] as ProcessingMetrics?,
     );
   }
 
   @override
   void write(BinaryWriter writer, EditResult obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.requestId)
-      ..writeByte(2)
       ..write(obj.imageId)
+      ..writeByte(2)
+      ..write(obj.originalImageId)
       ..writeByte(3)
       ..write(obj.editedImagePath)
       ..writeByte(4)
-      ..write(obj.createdAt)
+      ..write(obj.resultImagePath)
       ..writeByte(5)
-      ..write(obj.metadata);
+      ..write(obj.downloadUrl)
+      ..writeByte(6)
+      ..write(obj.createdAt)
+      ..writeByte(7)
+      ..write(obj.expiresAt)
+      ..writeByte(8)
+      ..write(obj.status)
+      ..writeByte(9)
+      ..write(obj.errorMessage)
+      ..writeByte(10)
+      ..write(obj.processingTimeMs)
+      ..writeByte(11)
+      ..write(obj.confidenceScores)
+      ..writeByte(12)
+      ..write(obj.metrics);
   }
 
   @override

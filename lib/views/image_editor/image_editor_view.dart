@@ -212,9 +212,6 @@ class _ImageEditorViewState extends State<ImageEditorView> {
 }
 
 // views/image_editor/components/marker_canvas.dart
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:vegavision/models/edit_request.dart';
 
 class MarkerCanvas extends StatefulWidget {
 

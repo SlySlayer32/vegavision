@@ -1,8 +1,7 @@
-import 'package:vegavision/models/image_model.dart';
 import 'package:vegavision/models/edit_request.dart';
 import 'package:vegavision/models/edit_result.dart';
+import 'package:vegavision/models/image_model.dart';
 
-// Interface for database operations
 abstract class Database {
   // Image operations
   Future<void> saveImage(ImageModel image);

@@ -1,43 +1,15 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'package:vegavision/models/edit_request.dart';
 import 'package:vegavision/models/image_model.dart';
+import 'package:vegavision/models/image_status.dart';
+import 'package:vegavision/models/marker_type.dart';
 import 'package:vegavision/repositories/edit_repository.dart';
 import 'package:vegavision/repositories/image_repository.dart';
 import 'package:vegavision/services/storage_service.dart';
 
-// TODO: Marker and MarkerType classes are used but not defined
-// Suggested implementation:
-// enum MarkerType {
-//   remove,
-//   replace,
-//   enhance,
-//   adjust
-// }
-//
-// class Marker {
-//   final String id;
-//   final double x;
-//   final double y;
-//   final MarkerType type;
-//   final double size;
-//   final String? label;
-//
-//   Marker({
-//     required this.id,
-//     required this.x,
-//     required this.y,
-//     required this.type,
-//     this.size = 1.0,
-//     this.label,
-//   });
-// }
-
 class EditableImage {
-
   EditableImage({required this.image, this.file, this.dimensions});
   final ImageModel image;
   final File? file;
@@ -45,7 +17,6 @@ class EditableImage {
 }
 
 class MarkerAction {
-
   MarkerAction({required this.type, this.marker, this.index});
   final ActionType type;
   final Marker? marker;
@@ -89,7 +60,6 @@ class UndoRedoStack<T> {
 }
 
 class ImageEditorViewModel extends ChangeNotifier {
-
   ImageEditorViewModel(this._imageRepository, this._editRepository, this._storageService);
   final ImageRepository _imageRepository;
   final EditRepository _editRepository;
@@ -383,9 +353,14 @@ class ImageEditorViewModel extends ChangeNotifier {
         // Update status to uploading
         await _imageRepository.updateImageStatus(_selectedImage!.id, ImageStatus.uploading);
 
+        // Generate unique filename
+        final String fileName =
+            '${_selectedImage!.id}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+
         // Upload image with progress tracking
         final String cloudPath = await _storageService.uploadImage(
           _selectedImage!.localPath,
+          fileName,
           onProgress: (progress) {
             _uploadProgress = progress;
             notifyListeners();

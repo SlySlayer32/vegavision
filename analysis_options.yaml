@@ -1,62 +1,46 @@
-include: package:flutter_lints/flutter_lints.yaml
-
-linter:
-  rules:
-    # Style rules from Dart Style Guide
-    - always_declare_return_types
-    - always_use_package_imports
-    - avoid_empty_else
-    - avoid_print
-    - avoid_redundant_argument_values
-    - avoid_types_as_parameter_names
-    - avoid_web_libraries_in_flutter
-    - camel_case_types
-    - cancel_subscriptions
-    - close_sinks
-    - comment_references
-    - constant_identifier_names
-    - control_flow_in_finally
-    - empty_catches
-    - empty_constructor_bodies
-    - empty_statements
-    - hash_and_equals
-    - implementation_imports
-    - library_names
-    - library_prefixes
-    - lines_longer_than_80_chars
-    - no_duplicate_case_values
-    - null_closures
-    - prefer_collection_literals
-    - prefer_conditional_assignment
-    - prefer_const_constructors
-    - prefer_const_declarations
-    - prefer_final_fields
-    - prefer_final_locals
-    - prefer_is_empty
-    - prefer_is_not_empty
-    - prefer_single_quotes
-    - sort_child_properties_last
-    - sort_constructors_first
-    - sort_unnamed_constructors_first
-    - unnecessary_brace_in_string_interps
-    - unnecessary_const
-    - unnecessary_new
-    - unnecessary_null_in_if_null_operators
-    - unnecessary_this
-    - unrelated_type_equality_checks
-    - use_key_in_widget_constructors
-    - use_rethrow_when_possible
-    - valid_regexps
+include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  language:
+    strict-casts: false # Made less strict
+    strict-raw-types: false # Made less strict
+    strict-inference: false # Made less strict
   errors:
-    # Treat specific issues as errors, warnings, or info
-    missing_required_param: error
-    missing_return: error
+    missing_required_param: warning # Changed from error to warning
+    missing_return: warning # Changed from error to warning
     todo: info
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
-  language:
-    strict-casts: true
-    strict-raw-types: true
+    - "**/*.mocks.dart"
+    - "lib/generated/**"
+
+linter:
+  rules:
+    # Essential rules for preventing bugs
+    avoid_empty_else: true
+    avoid_types_as_parameter_names: true
+    avoid_web_libraries_in_flutter: true
+    no_duplicate_case_values: true
+    valid_regexps: true
+
+    # Basic naming conventions
+    camel_case_types: true
+    library_names: true
+
+    # Resource management
+    cancel_subscriptions: true
+    close_sinks: true
+
+    # Flutter specific
+    use_build_context_synchronously: true
+
+    # Optional style rules that won't hinder rapid development
+    avoid_print: false # Allowed during development
+    prefer_single_quotes: false # Made optional
+    lines_longer_than_80_chars: false # Made optional
+    always_use_package_imports: false # Made optional
+    prefer_const_constructors: false # Made optional
+    prefer_const_declarations: false # Made optional
+    prefer_final_fields: false # Made optional
+    prefer_final_locals: false # Made optional

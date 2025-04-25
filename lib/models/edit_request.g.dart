@@ -8,7 +8,7 @@ part of 'edit_request.dart';
 
 class EditRequestAdapter extends TypeAdapter<EditRequest> {
   @override
-  final int typeId = 1;
+  final int typeId = 0;
 
   @override
   EditRequest read(BinaryReader reader) {
@@ -19,31 +19,38 @@ class EditRequestAdapter extends TypeAdapter<EditRequest> {
     return EditRequest(
       id: fields[0] as String,
       imageId: fields[1] as String,
-      instruction: fields[2] as String,
-      markers: (fields[3] as List)
-          .map((dynamic e) => (e as Map).cast<String, double>())
-          .toList(),
+      markers: (fields[2] as List).cast<Marker>(),
+      instruction: fields[3] as String,
       createdAt: fields[4] as DateTime,
-      status: fields[5] as String,
+      status: fields[5] as EditRequestStatus,
+      errorMessage: fields[6] as String?,
+      additionalOptions: (fields[7] as Map?)?.cast<String, dynamic>(),
+      userId: fields[8] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, EditRequest obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.imageId)
       ..writeByte(2)
-      ..write(obj.instruction)
-      ..writeByte(3)
       ..write(obj.markers)
+      ..writeByte(3)
+      ..write(obj.instruction)
       ..writeByte(4)
       ..write(obj.createdAt)
       ..writeByte(5)
-      ..write(obj.status);
+      ..write(obj.status)
+      ..writeByte(6)
+      ..write(obj.errorMessage)
+      ..writeByte(7)
+      ..write(obj.additionalOptions)
+      ..writeByte(8)
+      ..write(obj.userId);
   }
 
   @override
