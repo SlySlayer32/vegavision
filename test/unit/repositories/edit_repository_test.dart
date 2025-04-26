@@ -18,9 +18,13 @@ void main() {
 
   group('EditRepository Tests - Edit Requests', () {
     test('createEditRequest creates and saves request correctly', () async {
-      final markers = [Marker(id: 'marker-1', x: 0.5, y: 0.5, type: MarkerType.remove)];
+      final markers = [
+        Marker(id: 'marker-1', x: 0.5, y: 0.5, type: MarkerType.remove),
+      ];
 
-      when(mockDatabase.saveEditRequest(argThat(isNotNull))).thenAnswer((_) async {
+      when(mockDatabase.saveEditRequest(argThat(isNotNull))).thenAnswer((
+        _,
+      ) async {
         return null;
       });
 
@@ -67,9 +71,7 @@ void main() {
         startDate: now.subtract(const Duration(hours: 12)),
       );
 
-      final result = await editRepository.getEditRequests(
-        filter: filter,
-      );
+      final result = await editRepository.getEditRequests(filter: filter);
 
       expect(result.items.length, 1);
       expect(result.items.first.id, 'request-2');
@@ -85,12 +87,19 @@ void main() {
         createdAt: DateTime.now(),
       );
 
-      when(mockDatabase.getEditRequest('request-1')).thenAnswer((_) async => request);
-      when(mockDatabase.updateEditRequest(argThat(isNotNull))).thenAnswer((_) async {
+      when(
+        mockDatabase.getEditRequest('request-1'),
+      ).thenAnswer((_) async => request);
+      when(mockDatabase.updateEditRequest(argThat(isNotNull))).thenAnswer((
+        _,
+      ) async {
         return null;
       });
 
-      await editRepository.updateEditRequestStatus('request-1', EditRequestStatus.inProgress);
+      await editRepository.updateEditRequestStatus(
+        'request-1',
+        EditRequestStatus.inProgress,
+      );
 
       verify(mockDatabase.updateEditRequest(argThat(isNotNull))).called(1);
     });
@@ -113,10 +122,18 @@ void main() {
         ),
       ];
 
-      when(mockDatabase.getEditRequest('request-1')).thenAnswer((_) async => request);
-      when(mockDatabase.getEditResults(requestId: 'request-1')).thenAnswer((_) async => results);
-      when(mockDatabase.deleteEditResult('result-1')).thenAnswer((_) async => true);
-      when(mockDatabase.deleteEditRequest('request-1')).thenAnswer((_) async => true);
+      when(
+        mockDatabase.getEditRequest('request-1'),
+      ).thenAnswer((_) async => request);
+      when(
+        mockDatabase.getEditResults(requestId: 'request-1'),
+      ).thenAnswer((_) async => results);
+      when(
+        mockDatabase.deleteEditResult('result-1'),
+      ).thenAnswer((_) async => true);
+      when(
+        mockDatabase.deleteEditRequest('request-1'),
+      ).thenAnswer((_) async => true);
 
       final success = await editRepository.deleteEditRequest('request-1');
 
@@ -128,7 +145,9 @@ void main() {
 
   group('EditRepository Tests - Edit Results', () {
     test('saveEditResult creates and saves result correctly', () async {
-      when(mockDatabase.saveEditResult(argThat(isNotNull))).thenAnswer((_) async {
+      when(mockDatabase.saveEditResult(argThat(isNotNull))).thenAnswer((
+        _,
+      ) async {
         return null;
       });
 
@@ -209,9 +228,13 @@ void main() {
       ];
 
       when(mockDatabase.getEditResults()).thenAnswer((_) async => results);
-      when(mockDatabase.deleteEditResult('result-1')).thenAnswer((_) async => true);
+      when(
+        mockDatabase.deleteEditResult('result-1'),
+      ).thenAnswer((_) async => true);
 
-      await editRepository.cleanupFailedEditResults(now.subtract(const Duration(days: 1)));
+      await editRepository.cleanupFailedEditResults(
+        now.subtract(const Duration(days: 1)),
+      );
 
       verify(mockDatabase.deleteEditResult('result-1')).called(1);
       verifyNever(mockDatabase.deleteEditResult('result-2'));
@@ -221,15 +244,29 @@ void main() {
   group('EditRepository Tests - Batch Operations', () {
     test('createMultipleEditRequests handles errors gracefully', () async {
       final requestData = [
-        {'imageId': 'image-1', 'markers': <Marker>[], 'instruction': 'test1', 'userId': 'user-1'},
-        {'imageId': 'image-2', 'markers': <Marker>[], 'instruction': 'test2', 'userId': 'user-1'},
+        {
+          'imageId': 'image-1',
+          'markers': <Marker>[],
+          'instruction': 'test1',
+          'userId': 'user-1',
+        },
+        {
+          'imageId': 'image-2',
+          'markers': <Marker>[],
+          'instruction': 'test2',
+          'userId': 'user-1',
+        },
       ];
 
-      when(mockDatabase.saveEditRequest(argThat(isNotNull))).thenAnswer((_) async {
+      when(mockDatabase.saveEditRequest(argThat(isNotNull))).thenAnswer((
+        _,
+      ) async {
         return null;
       });
 
-      final results = await editRepository.createMultipleEditRequests(requestData);
+      final results = await editRepository.createMultipleEditRequests(
+        requestData,
+      );
 
       expect(results.length, 2);
       verify(mockDatabase.saveEditRequest(argThat(isNotNull))).called(2);
@@ -251,13 +288,20 @@ void main() {
               .toList();
 
       for (var i = 0; i < ids.length; i++) {
-        when(mockDatabase.getEditRequest(ids[i])).thenAnswer((_) async => requests[i]);
-        when(mockDatabase.updateEditRequest(argThat(isNotNull))).thenAnswer((_) async {
+        when(
+          mockDatabase.getEditRequest(ids[i]),
+        ).thenAnswer((_) async => requests[i]);
+        when(mockDatabase.updateEditRequest(argThat(isNotNull))).thenAnswer((
+          _,
+        ) async {
           return null;
         });
       }
 
-      await editRepository.updateMultipleEditRequestStatus(ids, EditRequestStatus.completed);
+      await editRepository.updateMultipleEditRequestStatus(
+        ids,
+        EditRequestStatus.completed,
+      );
 
       verify(mockDatabase.updateEditRequest(argThat(isNotNull))).called(2);
     });

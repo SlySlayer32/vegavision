@@ -1,0 +1,135 @@
+// **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
+class MarkerPositionAdapter extends TypeAdapter<MarkerPosition> {
+  @override
+  final int typeId = 4;
+
+  @override
+  MarkerPosition read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return MarkerPosition(
+      x: fields[0] as double,
+      y: fields[1] as double,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, MarkerPosition obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.x)
+      ..writeByte(1)
+      ..write(obj.y);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MarkerPositionAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class MarkerAdapter extends TypeAdapter<Marker> {
+  @override
+  final int typeId = 5;
+
+  @override
+  Marker read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Marker(
+      x: fields[0] as double,
+      y: fields[1] as double,
+      type: fields[2] as MarkerType,
+      customType: fields[3] as String?,
+      position: fields[4] as Vector3?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Marker obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.x)
+      ..writeByte(1)
+      ..write(obj.y)
+      ..writeByte(2)
+      ..write(obj.type)
+      ..writeByte(3)
+      ..write(obj.customType)
+      ..writeByte(4)
+      ..write(obj.position);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MarkerAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class MarkerTypeAdapter extends TypeAdapter<MarkerType> {
+  @override
+  final int typeId = 3;
+
+  @override
+  MarkerType read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return MarkerType.remove;
+      case 1:
+        return MarkerType.replace;
+      case 2:
+        return MarkerType.edit;
+      case 3:
+        return MarkerType.custom;
+      default:
+        return MarkerType.remove;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, MarkerType obj) {
+    switch (obj) {
+      case MarkerType.remove:
+        writer.writeByte(0);
+        break;
+      case MarkerType.replace:
+        writer.writeByte(1);
+        break;
+      case MarkerType.edit:
+        writer.writeByte(2);
+        break;
+      case MarkerType.custom:
+        writer.writeByte(3);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MarkerTypeAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

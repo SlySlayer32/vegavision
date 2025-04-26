@@ -1,4 +1,26 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
 
-dart run lint_staged
+# Format all staged files
+dart format lib test
+
+# Run the linter
+flutter analyze
+
+# Run tests
+flutter test
+
+# Run custom lints
+dart run custom_lint
+
+# Check code metrics
+dart run dart_code_metrics:metrics analyze lib
+
+# Sort imports
+dart run import_sorter:main
+
+# Validate dependencies
+dart run dependency_validator
+
+# If everything passes, allow the commit
+echo "✅ Code quality checks passed"

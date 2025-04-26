@@ -1,235 +1,167 @@
 # VegaVision
 
-AI-powered image editing application for iOS and Android.
+AI-powered image editing application built with Flutter, following MVVM architecture.
 
-## Project Overview
+## Features
 
-VegaVision is a Flutter application that provides AI-powered image editing capabilities specifically optimized for iOS and Android platforms. The app allows users to capture images, edit them using AI-powered tools, and save the results with a mobile-first approach.
+### Image Capture
+- Camera integration with real-time preview
+- Image selection from gallery
+- Platform-specific camera implementations
+- Permission handling for camera and storage
 
-## Getting Started
+### Image Editor
+- AI-powered image editing suggestions
+- Custom marker placement
+- Real-time preview
+- Undo/redo support
+- Save and share functionality
 
-### Prerequisites
-
-- Flutter SDK v3.7.2 or later
-- Dart SDK
-- Android Studio or VS Code with Flutter plugins
-- Xcode 14.0+ (for iOS development)
-- CocoaPods (for iOS dependency management)
-- Firebase account (for cloud storage and functions)
-
-### Installation
-
-1. Clone the repository:
-
-```bash
-git clone [repository-url]
-cd vegavision
-```
-
-2. Install dependencies:
-
-```bash
-flutter pub get
-```
-
-3. Configure Firebase for mobile platforms:
-
-```bash
-flutter pub add firebase_core
-flutter pub add flutterfire_cli
-flutter pub exec flutterfire configure
-```
-
-4. Generate model files:
-
-```bash
-flutter pub run build_runner build --delete-conflicting-outputs
-```
-
-5. Initialize Hive database:
-
-```bash
-flutter pub run hive_generator:init
-```
-
-6. Generate splash screens:
-
-```bash
-flutter pub run flutter_native_splash:create
-```
-
-7. Run the app on a mobile device:
-
-```bash
-flutter run
-```
-
-## Mobile Platform Development Setup
-
-### iOS Setup
-
-1. Install CocoaPods if not already installed:
-
-```bash
-sudo gem install cocoapods
-```
-
-2. Navigate to iOS directory and install pods:
-
-```bash
-cd ios
-pod install
-cd ..
-```
-
-3. Open the project in Xcode:
-
-```bash
-open ios/Runner.xcworkspace
-```
-
-4. Configure app capabilities, signing, and permissions in Xcode.
-
-### Android Setup
-
-1. Make sure you have Android SDK installed.
-
-2. Configure your app in the Android directory:
-   - Update `android/app/src/main/AndroidManifest.xml` with required permissions
-   - Configure Gradle settings if needed
-
-3. Build the Android app:
-
-```bash
-flutter build apk --release
-```
+### Result View
+- Before/after comparison
+- Edit history
+- Share functionality
+- Save to gallery
 
 ## Project Structure
 
-The app follows a clean architecture approach:
-
-- **core/**: Contains constants, dependency injection, and utilities
-- **models/**: Data classes
-- **repositories/**: Data access layer
-- **services/**: Business logic and services
-- **viewmodels/**: State management for views
-- **views/**: UI components organized by feature
-
-### Available Scripts
-
-The following scripts are available for development:
-
-- Format code:
-
-```bash
-dart run scripts:format
+```
+lib/
+├── core/                 # Core functionality
+│   ├── base/            # Base classes (MVVM)
+│   ├── di/             # Dependency injection
+│   ├── error/          # Error handling
+│   ├── logging/        # Logging system
+│   ├── navigation/     # Navigation service
+│   ├── permissions/    # Permission handling
+│   ├── theme/         # Theme management
+│   └── utils/         # Utilities
+├── features/           # Feature modules
+│   ├── image_capture/
+│   │   ├── models/
+│   │   ├── services/
+│   │   ├── view_models/
+│   │   └── views/
+│   ├── image_editor/
+│   └── result/
+└── shared/            # Shared components
+    ├── models/
+    ├── repositories/
+    └── services/
 ```
 
-- Fix common issues:
+## Setup
 
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/vegavision.git
+   ```
+
+2. Install dependencies:
+   ```bash
+   flutter pub get
+   ```
+
+3. Setup Firebase:
+   - Add `google-services.json` for Android
+   - Add `GoogleService-Info.plist` for iOS
+
+4. Run the app:
+   ```bash
+   flutter run
+   ```
+
+## Development
+
+### Code Generation
 ```bash
-dart run scripts:fix
+# Generate all files
+flutter pub run build_runner build
+
+# Watch for changes
+flutter pub run build_runner watch
 ```
 
-- Analyze code:
-
+### Testing
 ```bash
-dart run scripts:analyze
-```
-
-- Run custom lint:
-
-```bash
-dart run scripts:lint
-```
-
-- Run all checks:
-
-```bash
-dart run scripts:check_all
-```
-
-- Build Android release:
-
-```bash
-dart run scripts:build_android
-```
-
-- Build iOS release:
-
-```bash
-dart run scripts:build_ios
-```
-
-- Generate splash screens:
-
-```bash
-dart run scripts:generate_splash
-```
-
-### Pre-commit Hooks and Lint-staged
-
-This project uses pre-commit hooks with lint-staged to ensure code quality before pushing to GitHub. Follow these steps to set up:
-
-1. Install dependencies:
-
-```bash
-flutter pub get
-dart pub add --dev lint_staged husky
-```
-
-2. Initialize husky:
-
-```bash
-dart run husky install
-```
-
-3. Create a pre-commit hook:
-
-```bash
-dart run husky set .husky/pre-commit "dart run lint_staged"
-```
-
-## Testing
-
-### Running Tests
-
-Run unit and widget tests:
-
-```bash
+# Run all tests
 flutter test
+
+# Run with coverage
+flutter test --coverage
+
+# View coverage report
+genhtml coverage/lcov.info -o coverage/html
 ```
 
-Run integration tests on a connected device:
-
+### Code Quality
 ```bash
-flutter test integration_test/app_test.dart
+# Format code
+dart format lib test
+
+# Analyze code
+flutter analyze
+
+# Check all
+flutter pub run scripts:check_all
 ```
 
-## Mobile-Specific Features
+## Architecture
 
-- **Adaptive UI**: Follows both Material Design and Cupertino design patterns
-- **Camera Integration**: Optimized for iOS and Android camera hardware
-- **Local Storage**: Efficient local caching with Hive
-- **Push Notifications**: Integration with Firebase Cloud Messaging
-- **Device-specific optimizations**: Adapts to different screen sizes and capabilities
-- **Permissions Handling**: Smart permission requests for camera, storage, etc.
-- **Offline Support**: Works offline with data synchronization when online
+### MVVM Implementation
+- **Models**: Data structures and business logic
+- **Views**: UI components only
+- **ViewModels**: Business logic and state management
+- **Services**: Platform and business services
 
-## Future Web Support
+### Dependency Injection
+Using GetIt for service location and dependency injection.
 
-Web support is planned for future releases. The architecture has been designed to accommodate web platform expansion when needed.
+### State Management
+Using Provider/ChangeNotifier with MVVM pattern.
 
-## Dependencies
+## Tools & Libraries
 
-Key dependencies include:
+### Core
+- `get_it`: Dependency injection
+- `provider`: State management
+- `hive`: Local storage
+- `firebase_core`: Firebase integration
 
-- **UI Components**: Cupertino_icons, flutter_spinkit
-- **State Management**: Provider, GetIt
-- **Firebase/Google Cloud**: Firebase Storage, Cloud Functions
-- **Storage & Security**: Flutter Secure Storage, Hive
-- **Image Processing**: Camera, Flutter Image Compress
-- **Mobile-specific**: Device Info Plus, Connectivity Plus, Permission Handler
-- **Mobile UI/UX**: Modal Bottom Sheet, Pull to Refresh
+### Image Processing
+- `camera`: Camera access
+- `image_picker`: Image selection
+- `flutter_image_compress`: Image optimization
 
-For a complete list of dependencies, see the `pubspec.yaml` file.
+### UI Components
+- Material Design & Cupertino widgets
+- Custom MVVM widgets
+- Adaptive UI components
+
+### Testing
+- `mockito`: Mocking for tests
+- `golden_toolkit`: Golden tests
+- Integration tests
+- Widget tests
+
+## Best Practices
+
+See [GUIDELINES.md](docs/GUIDELINES.md) for detailed development guidelines covering:
+- Code organization
+- Error handling
+- Testing requirements
+- Performance optimization
+- Firebase integration
+- Platform-specific development
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

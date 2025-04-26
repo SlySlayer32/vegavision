@@ -70,7 +70,9 @@ class HiveDatabase implements Database {
   Future<List<EditRequest>> getEditRequests({String? imageId}) async {
     final requests =
         _editRequestsBox.values
-            .map((json) => EditRequest.fromJson(Map<String, dynamic>.from(json)))
+            .map(
+              (json) => EditRequest.fromJson(Map<String, dynamic>.from(json)),
+            )
             .toList();
 
     if (imageId != null) {
@@ -111,7 +113,10 @@ class HiveDatabase implements Database {
 
   @override
   /// Retrieves [EditResult]s from the Hive box, optionally filtered by [requestId] or [imageId].
-  Future<List<EditResult>> getEditResults({String? requestId, String? imageId}) async {
+  Future<List<EditResult>> getEditResults({
+    String? requestId,
+    String? imageId,
+  }) async {
     final results =
         _editResultsBox.values
             .map((json) => EditResult.fromJson(Map<String, dynamic>.from(json)))
@@ -175,46 +180,49 @@ class HiveDatabase implements Database {
   Future<void> deleteOldData(DateTime olderThan) async {
     try {
       // Delete old images
-      final oldImageKeys = _imagesBox.keys.where((key) {
-        final json = _imagesBox.get(key);
-        final createdAtString = json?['createdAt'] as String?;
-        if (createdAtString == null) return false;
-        try {
-          return DateTime.parse(createdAtString).isBefore(olderThan);
-        } catch (e) {
-          // Handle potential parsing errors
-          print('Error parsing date for image $key: $e');
-          return false;
-        }
-      }).toList(); // Collect keys to avoid concurrent modification issues
+      final oldImageKeys =
+          _imagesBox.keys.where((key) {
+            final json = _imagesBox.get(key);
+            final createdAtString = json?['createdAt'] as String?;
+            if (createdAtString == null) return false;
+            try {
+              return DateTime.parse(createdAtString).isBefore(olderThan);
+            } catch (e) {
+              // Handle potential parsing errors
+              print('Error parsing date for image $key: $e');
+              return false;
+            }
+          }).toList(); // Collect keys to avoid concurrent modification issues
       await _imagesBox.deleteAll(oldImageKeys);
 
       // Delete old edit requests
-      final oldRequestKeys = _editRequestsBox.keys.where((key) {
-        final json = _editRequestsBox.get(key);
-        final createdAtString = json?['createdAt'] as String?;
-        if (createdAtString == null) return false;
-        try {
-          return DateTime.parse(createdAtString).isBefore(olderThan);
-        } catch (e) {
-          print('Error parsing date for request $key: $e');
-          return false;
-        }
-      }).toList();
+      final oldRequestKeys =
+          _editRequestsBox.keys.where((key) {
+            final json = _editRequestsBox.get(key);
+            final createdAtString = json?['createdAt'] as String?;
+            if (createdAtString == null) return false;
+            try {
+              return DateTime.parse(createdAtString).isBefore(olderThan);
+            } catch (e) {
+              print('Error parsing date for request $key: $e');
+              return false;
+            }
+          }).toList();
       await _editRequestsBox.deleteAll(oldRequestKeys);
 
       // Delete old results
-      final oldResultKeys = _editResultsBox.keys.where((key) {
-        final json = _editResultsBox.get(key);
-        final createdAtString = json?['createdAt'] as String?;
-        if (createdAtString == null) return false;
-        try {
-          return DateTime.parse(createdAtString).isBefore(olderThan);
-        } catch (e) {
-          print('Error parsing date for result $key: $e');
-          return false;
-        }
-      }).toList();
+      final oldResultKeys =
+          _editResultsBox.keys.where((key) {
+            final json = _editResultsBox.get(key);
+            final createdAtString = json?['createdAt'] as String?;
+            if (createdAtString == null) return false;
+            try {
+              return DateTime.parse(createdAtString).isBefore(olderThan);
+            } catch (e) {
+              print('Error parsing date for result $key: $e');
+              return false;
+            }
+          }).toList();
       await _editResultsBox.deleteAll(oldResultKeys);
     } catch (e) {
       print('Error during deleteOldData: $e');
@@ -230,18 +238,20 @@ class HiveDatabase implements Database {
       final imageIds = _imagesBox.keys.toSet();
 
       // Cleanup edit requests without corresponding images
-      final orphanedRequestKeys = _editRequestsBox.keys.where((key) {
-        final json = _editRequestsBox.get(key);
-        return !imageIds.contains(json?['imageId']);
-      }).toList();
+      final orphanedRequestKeys =
+          _editRequestsBox.keys.where((key) {
+            final json = _editRequestsBox.get(key);
+            return !imageIds.contains(json?['imageId']);
+          }).toList();
       await _editRequestsBox.deleteAll(orphanedRequestKeys);
 
       // Cleanup results without corresponding requests
       final requestIds = _editRequestsBox.keys.toSet();
-      final orphanedResultKeys = _editResultsBox.keys.where((key) {
-        final json = _editResultsBox.get(key);
-        return !requestIds.contains(json?['requestId']);
-      }).toList();
+      final orphanedResultKeys =
+          _editResultsBox.keys.where((key) {
+            final json = _editResultsBox.get(key);
+            return !requestIds.contains(json?['requestId']);
+          }).toList();
       await _editResultsBox.deleteAll(orphanedResultKeys);
     } catch (e) {
       print('Error during cleanupUnusedData: $e');

@@ -21,7 +21,12 @@ void main() {
     });
 
     test('should create Marker with correct position', () {
-      final marker = Marker(id: 'marker-1', x: 0.5, y: 0.5, type: MarkerType.remove);
+      final marker = Marker(
+        id: 'marker-1',
+        x: 0.5,
+        y: 0.5,
+        type: MarkerType.remove,
+      );
 
       expect(marker.id, 'marker-1');
       expect(marker.x, 0.5);

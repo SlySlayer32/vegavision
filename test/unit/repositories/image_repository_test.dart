@@ -26,7 +26,9 @@ void main() {
       when(mockDatabase.saveImage(argThat(isNotNull))).thenAnswer((_) async {
         return null;
       });
-      when(mockStorageService.getFileSize(localPath)).thenAnswer((_) async => 1024);
+      when(
+        mockStorageService.getFileSize(localPath),
+      ).thenAnswer((_) async => 1024);
 
       final result = await imageRepository.saveImage(
         localPath,
@@ -110,7 +112,9 @@ void main() {
       );
 
       when(mockDatabase.getImage('image-1')).thenAnswer((_) async => image);
-      when(mockStorageService.deleteImage('cloud/path.jpg')).thenAnswer((_) async {
+      when(mockStorageService.deleteImage('cloud/path.jpg')).thenAnswer((
+        _,
+      ) async {
         return null;
       });
       when(mockDatabase.deleteImage('image-1')).thenAnswer((_) async => true);
@@ -123,7 +127,11 @@ void main() {
     });
 
     test('getImageFile returns file for valid image', () async {
-      final image = ImageModel(id: 'image-1', localPath: '/path/1.jpg', createdAt: DateTime.now());
+      final image = ImageModel(
+        id: 'image-1',
+        localPath: '/path/1.jpg',
+        createdAt: DateTime.now(),
+      );
 
       when(mockDatabase.getImage('image-1')).thenAnswer((_) async => image);
 
@@ -165,7 +173,9 @@ void main() {
 
       for (var i = 0; i < ids.length; i++) {
         when(mockDatabase.getImage(ids[i])).thenAnswer((_) async => images[i]);
-        when(mockDatabase.updateImage(argThat(isNotNull))).thenAnswer((_) async {
+        when(mockDatabase.updateImage(argThat(isNotNull))).thenAnswer((
+          _,
+        ) async {
           return null;
         });
       }
@@ -184,7 +194,11 @@ void main() {
       final images =
           ids
               .map(
-                (id) => ImageModel(id: id, localPath: '/path/$id.jpg', createdAt: DateTime.now()),
+                (id) => ImageModel(
+                  id: id,
+                  localPath: '/path/$id.jpg',
+                  createdAt: DateTime.now(),
+                ),
               )
               .toList();
 

@@ -1,93 +1,115 @@
-# VegaVision Project Guidelines
+# Copilot Instructions for VegaVision Project
 
-## Project Architecture
+This document provides strict guidelines to ensure high-quality code generation from GitHub Copilot. These instructions align with Flutter best practices, the MVVM architecture, and the specific requirements of the VegaVision project.
 
-- Use MVVM (Model-View-ViewModel) architecture throughout the project
-- Views should only handle UI rendering and user interactions
-- ViewModels handle business logic and state management
-- Models represent data structures
-- Use GetIt for dependency injection and service location
-- Organize code by feature, not by type
-- Import paths must be consistent (e.g., 'package:vegavision/views/...')
-- Never reference UI elements in models or repositories
+---
 
-## Flutter Coding Standards
+## General Rules
+1. Adhere to **Flutter's best practices** and **Effective Dart principles**.
+2. Enforce **MVVM architecture**:
+   - Models must only represent data structures.
+   - ViewModels should handle business logic and state management.
+   - Views should only handle UI rendering and user interactions.
+3. Generate **consistent and production-ready code**:
+   - Avoid placeholders like `TODO`, `example`, or incomplete methods.
+   - Do not produce code with missing implementations or vague comments.
+4. Use **Dart null safety** features in all generated code.
 
-- Follow Flutter style guide and Effective Dart principles
-- Use named parameters for widget constructors
-- Always prefer const constructors when possible
-- Use Dart null safety features consistently throughout the codebase
-- Extract reusable widgets to separate files
-- Keep widget methods short and focused (maximum 30 lines)
-- Always implement proper dispose methods to prevent memory leaks
-- Avoid direct service instantiation - use GetIt instead
+---
 
-## Platform-Specific Development
+## Project-Specific Guidelines
 
-- Create platform-specific implementations for cameras and storage
-- Use platform checks with `if (Platform.isIOS)` or `if (Platform.isAndroid)`
-- Implement proper permissions handling for both platforms
-- Test on both platforms before submitting code
-- Use Material Design for Android and Cupertino for iOS
-- Handle safe area and notches consistently across platforms
-- Implement adaptive screen sizing for different devices
+### Architecture & Dependency Management
+- Follow MVVM architecture strictly:
+  - Never reference UI elements in `Model` or `Repository` classes.
+  - Use `GetIt` for dependency injection and service location.
+  - Organize code by **feature**, not by type.
+- Ensure imports follow consistent paths:
+  - Example: `package:vegavision/views/...`.
 
-## Package Management
+### Flutter Best Practices
+- Use **named parameters** for all widget constructors.
+- Always prefer `const` constructors when possible.
+- Extract reusable widgets into separate files.
+- Keep widget methods under **30 lines** for readability.
+- Implement proper `dispose` methods for all stateful widgets to prevent memory leaks.
+- Avoid direct instantiation of services; always use `GetIt`.
 
-- Specify exact version constraints in pubspec.yaml
-- Document why each package is included
-- Minimize transitive dependencies
-- Check compatibility with both iOS and Android
-- Run `flutter pub get` after changing pubspec.yaml
-- Use `flutter_secure_storage` for sensitive information
-- Organize Firebase packages properly
+### Platform-Specific Code
+- Implement separate platform-specific functionality for cameras and storage.
+- Use `if (Platform.isIOS)` or `if (Platform.isAndroid)` checks for platform-specific logic.
+- Ensure proper permissions handling for both iOS and Android.
+- Use Material Design for Android and Cupertino for iOS.
+- Handle safe areas and device-specific notches consistently.
+- Implement adaptive screen sizing for different devices.
+
+---
 
 ## Error Handling
+- Wrap all asynchronous operations in `try/catch` blocks.
+- Log errors with contextual information.
+- Provide user-friendly error messages in the UI.
+- Use **typed exceptions** for specific error cases.
+- Never silently catch exceptions without handling them.
+- Handle network and permission errors gracefully.
 
-- Implement try/catch for all async operations
-- Log all errors with context information
-- Provide user-friendly error messages in UI
-- Never silently catch exceptions without handling
-- Use typed exceptions for specific error cases
-- Implement error boundaries in UI components
-- Handle network and permission errors gracefully
+---
 
 ## Firebase Integration
+- Use Firebase securely:
+  - Do not include Firebase secrets in version control.
+  - Ensure Firebase configuration files are properly generated and stored.
+- Initialize Firebase before using any Firebase services.
+- Handle Firebase errors and authentication failures explicitly.
+- Apply Firebase security rules to protect user data.
+- Test Firebase functionality in both online and offline modes.
 
-- Generate and properly store Firebase configuration files for all platforms
-- Keep Firebase secrets out of version control
-- Initialize Firebase before using any Firebase services
-- Handle Firebase errors and authentication failures
-- Use Cloud Functions for heavy processing
-- Implement proper security rules for Firebase services
-- Test Firebase functionality in both online and offline modes
+---
 
 ## Testing Guidelines
+- Write unit tests for all repositories and services.
+- Add widget tests for complex UI components.
+- Use **MockDatabase** and **MockServices** for testing.
+- Test both happy paths and error handling scenarios.
+- Aim for at least **70% code coverage**.
+- Test platform-specific features thoroughly.
 
-- Write unit tests for all repositories and services
-- Create widget tests for complex UI components
-- Use MockDatabase and MockServices in tests
-- Test happy paths and error handling scenarios
-- Aim for at least 70% code coverage
-- Implement widget testing for UI components
-- Test platform-specific functionality
+---
 
 ## Performance Optimization
+- Use `const` widgets to minimize rebuilds.
+- Optimize image handling with compression and caching.
+- Use lazy loading for list views.
+- Employ background processing for heavy operations.
+- Profile and optimize main-thread operations.
+- Use Hive for efficient local storage.
+- Cache Firebase calls where appropriate.
 
-- Use const widgets to minimize rebuilds
-- Implement proper image compression and caching
-- Optimize list views with lazy loading
-- Use background processing for heavy operations
-- Profile and optimize main thread operations
-- Implement efficient local storage with Hive
-- Optimize Firebase operations with caching
+---
 
 ## Naming Conventions
+- Use **PascalCase** for classes and enum types.
+- Use **camelCase** for variables, methods, and functions.
+- Use **snake_case** for file names.
+- Use **ALL_CAPS** for constants.
+- Prefix private variables with an underscore (`_`).
+- Name files according to their primary class or functionality.
 
-- Use PascalCase for classes and enum types
-- Use camelCase for variables, methods, and functions
-- Use snake_case for file names
-- Use ALL_CAPS for constants
-- Prefix private variables with underscore (_)
-- Name files according to their primary class
-- Keep naming consistent across similar components
+---
+
+## Code Generation Expectations for GitHub Copilot
+To ensure high-quality suggestions:
+1. **Context Awareness**: Suggestions must align with the MVVM architecture and Flutter best practices.
+2. **Avoid Placeholder Code**:
+   - Do not generate incomplete code or vague comments.
+   - Avoid placeholders like `TODO` or `example`.
+3. **Strict Adherence to Guidelines**:
+   - Follow project-specific rules for architecture, dependency management, and error handling.
+   - Never produce code that contradicts the instructions in this document.
+4. **Clean and Readable Code**:
+   - Suggestions must follow proper formatting and naming conventions.
+   - Avoid overly complex or lengthy methods.
+5. **Comprehensive Testing**:
+   - Include test cases where applicable.
+   - Ensure all edge cases are handled.
+

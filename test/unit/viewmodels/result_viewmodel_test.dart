@@ -65,12 +65,15 @@ void main() {
         status: EditResultStatus.completed,
       );
 
-      when(mockEditRepository.getEditRequest('request-1'))
-          .thenAnswer((_) async => request);
-      when(mockImageRepository.getImage('image-1'))
-          .thenAnswer((_) async => image);
-      when(mockEditRepository.getEditResultsForRequest('request-1'))
-          .thenAnswer((_) async => [result]);
+      when(
+        mockEditRepository.getEditRequest('request-1'),
+      ).thenAnswer((_) async => request);
+      when(
+        mockImageRepository.getImage('image-1'),
+      ).thenAnswer((_) async => image);
+      when(
+        mockEditRepository.getEditResultsForRequest('request-1'),
+      ).thenAnswer((_) async => [result]);
 
       await viewModel.loadEditRequest('request-1');
 
@@ -81,8 +84,9 @@ void main() {
     });
 
     test('loadEditRequest handles errors', () async {
-      when(mockEditRepository.getEditRequest('invalid-id'))
-          .thenThrow(Exception('Failed to load'));
+      when(
+        mockEditRepository.getEditRequest('invalid-id'),
+      ).thenThrow(Exception('Failed to load'));
 
       await viewModel.loadEditRequest('invalid-id');
 
@@ -115,20 +119,24 @@ void main() {
       );
 
       // Set up the request and image
-      when(mockEditRepository.getEditRequest('request-1'))
-          .thenAnswer((_) async => request);
-      when(mockImageRepository.getImage('image-1'))
-          .thenAnswer((_) async => image);
+      when(
+        mockEditRepository.getEditRequest('request-1'),
+      ).thenAnswer((_) async => request);
+      when(
+        mockImageRepository.getImage('image-1'),
+      ).thenAnswer((_) async => image);
 
       // Mock the processing steps
-      when(mockVisionService.analyzeImage(any, options: anyNamed('options')))
-          .thenAnswer((_) async => {'analysis': 'data'});
-      when(mockGeminiService.editImage(any, any, any))
-          .thenAnswer((_) async => '/path/to/result.jpg');
+      when(
+        mockVisionService.analyzeImage(any, options: anyNamed('options')),
+      ).thenAnswer((_) async => {'analysis': 'data'});
+      when(
+        mockGeminiService.editImage(any, any, any),
+      ).thenAnswer((_) async => '/path/to/result.jpg');
 
       // Load the request first
       await viewModel.loadEditRequest('request-1');
-      
+
       // Process with direct API
       viewModel.setProcessingMethod(ProcessingMethod.directApi);
       await viewModel.processEditRequest();
@@ -155,10 +163,12 @@ void main() {
         createdAt: DateTime.now(),
       );
 
-      when(mockEditRepository.getEditRequest('request-1'))
-          .thenAnswer((_) async => request);
-      when(mockImageRepository.getImage('image-1'))
-          .thenAnswer((_) async => image);
+      when(
+        mockEditRepository.getEditRequest('request-1'),
+      ).thenAnswer((_) async => request);
+      when(
+        mockImageRepository.getImage('image-1'),
+      ).thenAnswer((_) async => image);
 
       // Load the request
       await viewModel.loadEditRequest('request-1');
@@ -189,13 +199,15 @@ void main() {
         createdAt: DateTime.now(),
       );
 
-      when(mockEditRepository.getEditRequest('request-1'))
-          .thenAnswer((_) async => request);
-      when(mockImageRepository.getImage('image-1'))
-          .thenAnswer((_) async => image);
+      when(
+        mockEditRepository.getEditRequest('request-1'),
+      ).thenAnswer((_) async => request);
+      when(
+        mockImageRepository.getImage('image-1'),
+      ).thenAnswer((_) async => image);
 
       await viewModel.loadEditRequest('request-1');
-      
+
       viewModel.setProcessingMethod(ProcessingMethod.mockResult);
       await viewModel.processEditRequest();
 

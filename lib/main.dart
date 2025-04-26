@@ -1,19 +1,53 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:vegavision/core/di/hive_setup.dart';
 import 'package:vegavision/core/di/locator.dart';
+import 'package:vegavision/core/error/error_handler.dart';
+import 'package:vegavision/core/navigation/navigation_service.dart';
+import 'package:vegavision/core/navigation/routes.dart';
+import 'package:vegavision/core/theme/theme_service.dart';
+import 'package:vegavision/core/permissions/permission_handler.dart';
+import 'package:vegavision/core/services/connectivity_service.dart';
 import 'package:vegavision/firebase_options.dart';
-import 'package:vegavision/views/image_capture/image_capture_view.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    // Initialize error handling
+    AppErrorHandler.initialize();
 
-  // Initialize Firebase
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    // Ensure Flutter bindings are initialized
+    WidgetsFlutterBinding.ensureInitialized();
 
-  // Setup dependencies
-  await setupDependencies();
+    // Set preferred orientations
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
 
-  runApp(const MyApp());
+    // Initialize Hive
+    await initializeHive();
+
+    // Initialize Firebase
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    // Setup dependencies
+    await setupDependencies();
+
+    // Request initial permissions
+    final permissionManager = PermissionManager();
+    await permissionManager.requestAllRequiredPermissions();
+
+    runApp(const MyApp());
+  } catch (e, stack) {
+    debugPrint('Initialization error: $e');
+    debugPrint('Stack trace: $stack');
+    AppErrorHandler.handleError(e, stack);
+    throw e; // Rethrow to show error screen
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -21,46 +55,35 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'VegaVision AI Editor', // Updated title slightly
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true, // Enable Material 3
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        appBarTheme: const AppBarTheme(
-          elevation: 2,
-          centerTitle: true,
-          backgroundColor: Colors.deepPurple, // Example color
-          foregroundColor: Colors.white, // Example color
+    return MultiProvider(
+      providers: [
+        // Core services
+        Provider<ConnectivityService>(
+          create: (_) => getIt<ConnectivityService>(),
         ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            textStyle: const TextStyle(fontWeight: FontWeight.bold),
-            backgroundColor: Colors.deepPurple, // Example color
-            foregroundColor: Colors.white, // Example color
-          ),
-        ),
+        Provider<NavigationService>(create: (_) => getIt<NavigationService>()),
+      ],
+      child: MaterialApp(
+        title: 'VegaVision AI Editor',
+        navigatorKey: getIt<NavigationService>().navigatorKey,
+        onGenerateRoute: Routes.generateRoute,
+        theme: ThemeService.getLightTheme(),
+        darkTheme: ThemeService.getDarkTheme(),
+        themeMode: ThemeMode.system,
+        debugShowCheckedModeBanner: false,
+        builder: (context, child) {
+          // Set up error boundary
+          ErrorWidget.builder = (FlutterErrorDetails details) {
+            return AppErrorHandler.buildErrorWidget(details);
+          };
+
+          // Apply system text scaling
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: child ?? const SizedBox(),
+          );
+        },
       ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true, // Enable Material 3
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        appBarTheme: const AppBarTheme(
-          elevation: 2,
-          centerTitle: true,
-          // Dark theme colors can be customized further if needed
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            textStyle: const TextStyle(fontWeight: FontWeight.bold),
-            // Dark theme button colors can be customized further
-          ),
-        ),
-      ),
-      home: const ImageCaptureView(),
     );
   }
 }

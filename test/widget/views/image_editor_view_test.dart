@@ -16,7 +16,11 @@ void main() {
     mockImageRepository = MockImageRepository();
     mockEditRepository = MockEditRepository();
     mockStorageService = MockStorageService();
-    viewModel = ImageEditorViewModel(mockImageRepository, mockEditRepository, mockStorageService);
+    viewModel = ImageEditorViewModel(
+      mockImageRepository,
+      mockEditRepository,
+      mockStorageService,
+    );
   });
 
   Widget createTestWidget() {

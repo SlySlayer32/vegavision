@@ -1,0 +1,24 @@
+[debug] [2025-04-25T12:12:11.243Z] ----------------------------------------------------------------------
+[debug] [2025-04-25T12:12:11.245Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Sly\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js apps:android:sha:create android.app.vegavision 9E:5D:BE:CD:08:45:27:03:34:C2:9F:40:12:62:BD:57:F6:15:86:7A --project vega-vision-da813
+[debug] [2025-04-25T12:12:11.246Z] CLI Version:   14.2.1
+[debug] [2025-04-25T12:12:11.246Z] Platform:      win32
+[debug] [2025-04-25T12:12:11.246Z] Node Version:  v22.13.1
+[debug] [2025-04-25T12:12:11.246Z] Time:          Fri Apr 25 2025 22:12:11 GMT+1000 (Australian Eastern Standard Time)
+[debug] [2025-04-25T12:12:11.246Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-04-25T12:12:11.414Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-04-25T12:12:11.418Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-04-25T12:12:11.418Z] > authorizing via signed-in user (slyslayerfx@gmail.com)
+[debug] [2025-04-25T12:12:11.421Z] Checked if tokens are valid: true, expires at: 1745586257946
+[debug] [2025-04-25T12:12:11.421Z] Checked if tokens are valid: true, expires at: 1745586257946
+[debug] [2025-04-25T12:12:11.422Z] >>> [apiv2][query] POST https://firebase.googleapis.com/v1beta1/projects/vega-vision-da813/androidApps/android.app.vegavision/sha [none]
+[debug] [2025-04-25T12:12:11.422Z] >>> [apiv2][body] POST https://firebase.googleapis.com/v1beta1/projects/vega-vision-da813/androidApps/android.app.vegavision/sha {"shaHash":"9E:5D:BE:CD:08:45:27:03:34:C2:9F:40:12:62:BD:57:F6:15:86:7A","certType":"SHA_1"}
+[debug] [2025-04-25T12:12:11.789Z] <<< [apiv2][status] POST https://firebase.googleapis.com/v1beta1/projects/vega-vision-da813/androidApps/android.app.vegavision/sha 400
+[debug] [2025-04-25T12:12:11.789Z] <<< [apiv2][body] POST https://firebase.googleapis.com/v1beta1/projects/vega-vision-da813/androidApps/android.app.vegavision/sha {"error":{"code":400,"message":"Request contains an invalid argument.","status":"INVALID_ARGUMENT"}}
+[debug] [2025-04-25T12:12:11.790Z] Request to https://firebase.googleapis.com/v1beta1/projects/vega-vision-da813/androidApps/android.app.vegavision/sha had HTTP Error: 400, Request contains an invalid argument.
+[debug] [2025-04-25T12:12:12.071Z] FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects/vega-vision-da813/androidApps/android.app.vegavision/sha had HTTP Error: 400, Request contains an invalid argument.
+    at responseToError (C:\Users\Sly\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:52:12)
+    at RetryOperation._fn (C:\Users\Sly\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:312:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[error] 
+[error] Error: Failed to create SHA certificate hash for Android app android.app.vegavision. See firebase-debug.log for more info.

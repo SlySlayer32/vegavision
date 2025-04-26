@@ -1,0 +1,46 @@
+custom_rules:
+  - name: no_direct_service_instantiation
+    description: Services should be obtained through GetIt instead of direct instantiation
+    pattern: 'new [A-Z][a-zA-Z]*Service\\('
+    severity: error
+
+  - name: enforce_mvvm_structure
+    description: Files should be in the correct MVVM directory structure
+    pattern: '^(models|views|viewmodels)/.*\\.dart$'
+    severity: error
+
+  - name: no_ui_in_viewmodel
+    description: ViewModels should not contain UI elements
+    pattern: 'import .*(material|cupertino|widgets).*'
+    severity: error
+    applies_to: 
+      - '**/viewmodels/**'
+
+  - name: require_documentation
+    description: Public APIs must be documented
+    pattern: '^\\s*(class|enum|typedef|void|[A-Z][a-zA-Z]*) [A-Z]'
+    severity: warning
+    requires_comment: true
+
+  - name: file_naming
+    description: Files should be named according to their primary class
+    pattern: '^[a-z][a-z0-9_]*\\.dart$'
+    severity: error
+
+  - name: no_relative_imports
+    description: Use package imports instead of relative imports
+    pattern: '\\.\\./|\\./|package:'
+    severity: error
+
+  - name: test_file_location
+    description: Test files should be in the correct directory
+    pattern: '^test/.*_test\\.dart$'
+    severity: error
+    applies_to:
+      - '**/test/**'
+
+  - name: widget_keys
+    description: All interactive widgets should have keys
+    pattern: '(ElevatedButton|TextButton|IconButton|TextField)\\('
+    severity: warning
+    requires: 'key:'

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "642331528519",
+    "project_id": "vega-vision-da813",
+    "storage_bucket": "vega-vision-da813.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:642331528519:android:cd3c148655eff06283d062",
+        "android_client_info": {
+          "package_name": "com.vegavision.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPij3n-dgKj6boKWub4QjmDO39ddLvilo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

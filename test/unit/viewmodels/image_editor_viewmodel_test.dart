@@ -45,10 +45,12 @@ void main() {
         createdAt: DateTime.now(),
       );
 
-      when(mockImageRepository.getImage('test-1'))
-          .thenAnswer((_) async => image);
-      when(mockImageRepository.getImageFile('test-1'))
-          .thenAnswer((_) async => File('/path/to/image.jpg'));
+      when(
+        mockImageRepository.getImage('test-1'),
+      ).thenAnswer((_) async => image);
+      when(
+        mockImageRepository.getImageFile('test-1'),
+      ).thenAnswer((_) async => File('/path/to/image.jpg'));
 
       await viewModel.loadImage('test-1');
 
@@ -58,8 +60,9 @@ void main() {
     });
 
     test('loadImage handles errors correctly', () async {
-      when(mockImageRepository.getImage('invalid-id'))
-          .thenThrow(Exception('Image not found'));
+      when(
+        mockImageRepository.getImage('invalid-id'),
+      ).thenThrow(Exception('Image not found'));
 
       await viewModel.loadImage('invalid-id');
 
@@ -132,8 +135,9 @@ void main() {
           localPath: '/path/to/image.jpg',
           createdAt: DateTime.now(),
         );
-        when(mockImageRepository.getImage('test-1'))
-            .thenAnswer((_) async => image);
+        when(
+          mockImageRepository.getImage('test-1'),
+        ).thenAnswer((_) async => image);
         await viewModel.loadImage('test-1');
 
         final result2 = await viewModel.submitEditRequest();
@@ -148,8 +152,9 @@ void main() {
           localPath: '/path/to/image.jpg',
           createdAt: DateTime.now(),
         );
-        when(mockImageRepository.getImage('test-1'))
-            .thenAnswer((_) async => image);
+        when(
+          mockImageRepository.getImage('test-1'),
+        ).thenAnswer((_) async => image);
         await viewModel.loadImage('test-1');
 
         // Add marker and instruction
@@ -157,8 +162,12 @@ void main() {
         viewModel.setInstruction('Remove the background');
 
         // Mock cloud upload
-        when(mockStorageService.uploadImage(any, onProgress: anyNamed('onProgress')))
-            .thenAnswer((_) async => 'cloud/path.jpg');
+        when(
+          mockStorageService.uploadImage(
+            any,
+            onProgress: anyNamed('onProgress'),
+          ),
+        ).thenAnswer((_) async => 'cloud/path.jpg');
 
         // Mock edit request creation
         final request = EditRequest(
@@ -168,15 +177,21 @@ void main() {
           instruction: viewModel.instruction,
           createdAt: DateTime.now(),
         );
-        when(mockEditRepository.createEditRequest(any, any, any))
-            .thenAnswer((_) async => request);
+        when(
+          mockEditRepository.createEditRequest(any, any, any),
+        ).thenAnswer((_) async => request);
 
         final result = await viewModel.submitEditRequest();
 
         expect(result, isNotNull);
         expect(result?.id, 'request-1');
         expect(viewModel.error, null);
-        verify(mockStorageService.uploadImage(any, onProgress: anyNamed('onProgress'))).called(1);
+        verify(
+          mockStorageService.uploadImage(
+            any,
+            onProgress: anyNamed('onProgress'),
+          ),
+        ).called(1);
         verify(mockEditRepository.createEditRequest(any, any, any)).called(1);
       });
 

@@ -17,9 +17,16 @@ void main() {
 
     test('copyWith should create new instance with updated values', () {
       final now = DateTime.now();
-      final model = ImageModel(id: 'test-id', localPath: '/path/to/image.jpg', createdAt: now);
+      final model = ImageModel(
+        id: 'test-id',
+        localPath: '/path/to/image.jpg',
+        createdAt: now,
+      );
 
-      final updated = model.copyWith(cloudPath: 'cloud/path.jpg', status: ImageStatus.uploaded);
+      final updated = model.copyWith(
+        cloudPath: 'cloud/path.jpg',
+        status: ImageStatus.uploaded,
+      );
 
       expect(updated.id, model.id);
       expect(updated.cloudPath, 'cloud/path.jpg');

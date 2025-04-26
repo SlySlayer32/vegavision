@@ -17,12 +17,17 @@ void main() {
 
   Widget createTestWidget() {
     return MaterialApp(
-      home: ChangeNotifierProvider.value(value: viewModel, child: const ImageCaptureView()),
+      home: ChangeNotifierProvider.value(
+        value: viewModel,
+        child: const ImageCaptureView(),
+      ),
     );
   }
 
   group('ImageCaptureView Widget Tests', () {
-    testWidgets('shows loading state when not initialized', (WidgetTester tester) async {
+    testWidgets('shows loading state when not initialized', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(createTestWidget());
       expect(find.text('Initializing camera...'), findsOneWidget);
     });
