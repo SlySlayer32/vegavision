@@ -1,5 +1,7 @@
 import 'package:hive/hive.dart';
 
+part 'edit_result_status.g.dart';
+
 @HiveType(typeId: 4)
 enum EditResultStatus {
   @HiveField(0)

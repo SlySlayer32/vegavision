@@ -17,7 +17,8 @@
     "editor.suggest.snippetsPreventQuickSuggestions": false,
     "editor.suggestSelection": "first",
     "editor.tabCompletion": "onlySnippets",
-    "editor.wordBasedSuggestions": "off"
+    "editor.wordBasedSuggestions": "off",
+    "editor.defaultFormatter": "Dart-Code.dart-code"
   },
   "dart.previewFlutterUiGuides": true,
   "dart.previewFlutterUiGuidesCustomTracking": true,
@@ -28,6 +29,12 @@
   "dart.lineLength": 100,
   "dart.showInspectorNotificationsForWidgetErrors": true,
   "dart.warnWhenEditingFilesOutsideWorkspace": true,
+  "dart.flutterHotReloadOnSave": "all",
+  "dart.hotReloadOnSave": "all",
+  "dart.previewHotReloadOnSaveWatcher": true,
+  "dart.flutterSdkPath": ".fvm/flutter_sdk",
+  "dart.flutterCreateAndroidLanguage": "kotlin",
+  "dart.flutterCreateIOSLanguage": "swift",
   "files.exclude": {
     "**/.dart_tool": true,
     "**/.idea": true,
@@ -35,19 +42,91 @@
     "**/*.g.dart": false,
     "**/*.freezed.dart": false,
     "**/build": true,
-    "**/ios/Pods": true
+    "**/ios/Pods": true,
+    "**/.fvm": true,
+    "**/.flutter-plugins": true,
+    "**/.flutter-plugins-dependencies": true,
+    "**/*.iml": true,
+    "**/.DS_Store": true
   },
   "files.watcherExclude": {
     "**/.dart_tool/**": true,
     "**/.idea/**": true,
     "**/build/**": true,
-    "**/ios/Pods/**": true
+    "**/ios/Pods/**": true,
+    "**/.fvm/**": true,
+    "**/node_modules/**": true
   },
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
-    "*.dart": "${capture}.g.dart, ${capture}.freezed.dart"
+    "*.dart": "${capture}.g.dart, ${capture}.freezed.dart, ${capture}.mocks.dart, ${capture}.config.dart",
+    "pubspec.yaml": "pubspec.lock, .packages, .flutter-plugins, .flutter-plugins-dependencies",
+    ".gitignore": ".gitattributes, .gitmodules, .gitmessage, .mailmap, .git-blame*",
+    "README.md": "CHANGELOG.md, CONTRIBUTING.md, LICENSE, SECURITY.md, CODE_OF_CONDUCT.md"
   },
   "workbench.colorCustomizations": {
     "editorRuler.foreground": "#ff4081"
-  }
+  },
+  
+  // GitHub related settings
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": true,
+    "plaintext": true,
+    "markdown": true,
+    "dart": true
+  },
+  "githubPullRequests.fileListLayout": "tree",
+  "githubPullRequests.pullBranch": "always",
+  "githubPullRequests.defaultMergeMethod": "squash",
+  "githubPullRequests.remotes": [
+    "origin",
+    "upstream"
+  ],
+  "gitlens.hovers.currentLine.over": "line",
+  "gitlens.codeLens.enabled": true,
+  "gitlens.statusBar.enabled": true,
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "git.suggestSmartCommit": true,
+  
+  // Flutter specific improvements
+  "debug.openDebug": "openOnDebugBreak",
+  "debug.internalConsoleOptions": "openOnSessionStart",
+  "terminal.integrated.env.windows": {
+    "PATH": "${env:PATH};${workspaceFolder}/.fvm/flutter_sdk/bin"
+  },
+  "terminal.integrated.env.osx": {
+    "PATH": "${env:PATH}:${workspaceFolder}/.fvm/flutter_sdk/bin"
+  },
+  "terminal.integrated.env.linux": {
+    "PATH": "${env:PATH}:${workspaceFolder}/.fvm/flutter_sdk/bin"
+  },
+  "yaml.schemas": {
+    "https://json.schemastore.org/pubspec.json": "pubspec.yaml"
+  },
+  "material-icon-theme.folders.associations": {
+    "bloc": "controller",
+    "cubit": "controller",
+    "screen": "layout",
+    "screens": "layout",
+    "page": "layout",
+    "pages": "layout",
+    "view": "layout",
+    "views": "layout",
+    "feature": "rules",
+    "features": "rules",
+    "domain": "class",
+    "data": "api",
+    "repository": "mappings",
+    "repositories": "mappings",
+    "widgets": "components",
+    "providers": "context"
+  },
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "editor.semanticHighlighting.enabled": true,
+  "editor.inlineSuggest.enabled": true
 }

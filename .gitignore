@@ -26,6 +26,9 @@ coverage/
 *.orig
 .navigate/
 
+# Flutter metadata
+.metadata
+
 # Android specific
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
@@ -36,6 +39,7 @@ coverage/
 **/android/**/GeneratedPluginRegistrant.java
 **/android/key.properties
 *.jks
+*.keystore
 
 # iOS specific
 **/ios/**/*.mode1v3
@@ -90,3 +94,6 @@ key.properties
 lib/generated/
 generated/
 .fvm/
+
+# Visual Studio user directory
+.vs/

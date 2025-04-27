@@ -5,3 +5,21 @@ targets:
         options:
           input_files:
             - lib/models/**.dart
+      mockito|mockBuilder:
+        enabled: true
+        generate_for:
+          - test/**.dart
+      json_serializable|json_serializable:
+        enabled: true
+        generate_for:
+          - lib/models/**.dart
+        options:
+          any_map: false
+          checked: true
+          create_factory: true
+          create_to_json: true
+          disallow_unrecognized_keys: false
+          explicit_to_json: true
+          field_rename: none
+          ignore_unannotated: false
+          include_if_null: true

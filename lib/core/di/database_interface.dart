@@ -1,8 +1,23 @@
+import 'package:flutter/foundation.dart';
 import 'package:vegavision/models/edit_request.dart';
 import 'package:vegavision/models/edit_result.dart';
 import 'package:vegavision/models/image_model.dart';
 
+/// Abstract interface for database operations
 abstract class Database {
+  /// Initialize the database
+  Future<void> initialize();
+
+  /// Close the database connection
+  Future<void> close();
+
+  /// Clear all data from the database
+  Future<void> clear();
+
+  /// Check if the database is ready
+  @protected
+  bool get isReady;
+
   // Image operations
   Future<void> saveImage(ImageModel image);
   Future<List<ImageModel>> getImages();

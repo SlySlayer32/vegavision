@@ -20,7 +20,7 @@ class MarkerAdapter extends TypeAdapter<Marker> {
       id: fields[0] as String,
       x: fields[1] as double,
       y: fields[2] as double,
-      type: fields[3] as InvalidType,
+      type: fields[3] as MarkerType,
       size: fields[4] as double,
       label: fields[5] as String?,
     );
